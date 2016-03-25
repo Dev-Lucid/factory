@@ -3,11 +3,13 @@ namespace Lucid\Component\Factory;
 
 class Factory implements FactoryInterface, FactoryMinimalInterface
 {
-    public $path = __DIR__.'/../../../../../app/';
+    public $path = '';
     public $logger = null;
 
     public function __construct($logger = null)
     {
+        $this->path = realpath(__DIR__.'/../../../../../app');
+
         if (is_null($logger)) {
             $this->logger = new \Lucid\Component\BasicLogger\BasicLogger();
         } else {
@@ -18,8 +20,10 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
         }
     }
 
-    public function model(string $name, $id)
+    public function model(string $name, $id=null)
     {
+        \Model::$auto_prefix_models = 'App\\model\\';
+
         $className = $this->loadClass(__FUNCTION__, $name);
         if (is_null($id) === true) {
             return \Model::factory($name);
