@@ -41,11 +41,11 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
         return $this->packageObject(__FUNCTION__, $name);
     }
 
-    public function view(string $name, $parameters)
+    public function view(string $name, $parameters, $method='render')
     {
         $object =  $this->packageObject(__FUNCTION__, $name);
-        $boundParameters = $this->buildParameters($object, 'render', $parameters);
-        return call_user_func([$object, 'render'], $parameters);
+        $boundParameters = $this->buildParameters($object, $method, $parameters);
+        return call_user_func([$object, $method], $parameters);
     }
 
     public function ruleset(string $name)

@@ -8,6 +8,6 @@ namespace Lucid\Component\Factory;
 interface FactoryMinimalInterface
 {
     public function controller(string $name);
-    public function view(string $name, $parameters);
+    public function view(string $name, $parameters, $method='render');
     public function buildParameters($object, string $method, $parameters=[]);
 }
