@@ -1,0 +1,27 @@
+{
+  "name": "factory",
+  "type":"library",
+  "repo": "devlucid/factory",
+  "description": "",
+  "authors": [
+      {
+          "name":     "Mike Thorn",
+          "email":    "mthorn@devlucid.com"
+      }
+  ],
+  "maintainers": [
+      {
+          "name":     "Mike Thorn",
+          "email":    "mthorn@devlucid.com"
+      }
+  ],
+  "autoload": {
+      "psr-4": {"Lucid\\Component\\Factory\\": "/src/php"}
+  },
+  "autoload-dev": {
+      "psr-4": {"Lucid\\Component\\Factory\\": "/src/php"}
+  },
+  "license": "MIT",
+  "bin": [
+  ]
+}
