@@ -1,8 +1,9 @@
 <?php
 namespace Lucid\Component\Factory;
 
-abstract class Model extends \Model implements ModelInterface
+abstract class Model extends \Model implements ModelInterface, FactoryObjectInterface
 {
+    use FactoryObjectTrait;
     protected $readOnlyColumns = [];
     protected $writeOnceColumns = [];
 

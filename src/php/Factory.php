@@ -41,11 +41,9 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
         return $this->packageObject(__FUNCTION__, $name);
     }
 
-    public function view(string $name, $parameters, $method='render')
+    public function view(string $name)
     {
-        $object =  $this->packageObject(__FUNCTION__, $name);
-        $boundParameters = $this->buildParameters($object, $method, $parameters);
-        return call_user_func([$object, $method], $parameters);
+        return $this->packageObject(__FUNCTION__, $name);
     }
 
     public function ruleset(string $name)
@@ -67,6 +65,10 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
     {
         $className = $this->loadClass($type, $name);
         $object = new $className();
+        if (in_array('Lucid\Component\Factory\FactoryObjectInterface', class_implements($object)) === false) {
+            throw new \Exception('Factory tried to create type='.$type.',name='.$name.', but did not implement a required interface. Any object created by Lucid\\Component\\Factory must implement \\Lucid\\Component\\Factory\\FactoryObjectInterface.');
+        }
+        $object->setFactory($this);
         return $object;
     }
 
@@ -110,7 +112,7 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
             $type = strval($methodParameter->getType());
             if ($parameters->is_set($methodParameter->name)) {
                 if (is_null($type) === true || $type == '' || method_exists($parameters, $type) === false) {
-                    $boundParameters[] = $parameters->raw($methodParameter->name);
+                    $boundParameters[] = $parameters->get($methodParameter->name);
                 } else {
                     $boundParameters[] = $parameters->$type($methodParameter->name);
                 }
