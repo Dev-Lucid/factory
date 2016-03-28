@@ -120,7 +120,7 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
                 if ($methodParameter->isDefaultValueAvailable() === true) {
                     $boundParameters[] = $methodParameter->getDefaultValue();
                 } else {
-                    throw new \Exception('Could not find a value to set for parameter '.$methodParameter->name.' of function '.$thisClass.'->'.$method.', and no default value was set.');
+                    throw new \Exception('Could not find a value to set for parameter '.$methodParameter->name.' of function '.$objectClass.'->'.$method.', and no default value was set.');
                 }
             }
         }
