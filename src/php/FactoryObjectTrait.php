@@ -10,23 +10,41 @@ Trait FactoryObjectTrait
         $this->factory = $factory;
     }
 
-    public function model()
+    public function model($id=null)
     {
-        return $this->factory->model((new \ReflectionClass($this))->getShortName());
+        $object = $this->factory->model((new \ReflectionClass($this))->getShortName());
+        if (is_null($id) === false) {
+            return $object->find_one($id);
+        }
+        return $object;
     }
 
-    public function view($method='render')
-    {
-        return $this->factory->view((new \ReflectionClass($this))->getShortName());
+    protected function _callMethodIfPassed($type, ...$parameters) {
+        $object = $this->factory->$type((new \ReflectionClass($this))->getShortName());
+        if (count($parameters) > 0) {
+            $method = array_shift($parameters);
+            return $object->$method(...$parameters);
+        }
+        return $object;
     }
 
-    public function controller()
+    public function view(...$parameters)
     {
-        return $this->factory->controller((new \ReflectionClass($this))->getShortName());
+        return $this->_callMethodIfPassed('view', ...$parameters);
     }
 
-    public function ruleset()
+    public function controller(...$parameters)
     {
-        return $this->factory->ruleset((new \ReflectionClass($this))->getShortName());
+        return $this->_callMethodIfPassed('controller', ...$parameters);
+    }
+
+    public function ruleset(...$parameters)
+    {
+        return $this->_callMethodIfPassed('ruleset', ...$parameters);
+    }
+
+    public function library(...$parameters)
+    {
+        return $this->_callMethodIfPassed('library', ...$parameters);
     }
 }

@@ -36,24 +36,44 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
         }
     }
 
-    public function controller(string $name)
+    public function controller(string $name, ...$parameters)
     {
-        return $this->packageObject(__FUNCTION__, $name);
+        $obj = $this->packageObject(__FUNCTION__, $name);
+        if (count($parameters) > 0) {
+            $method = array_shift($parameters);
+            return $obj->$method(...$parameters);
+        }
+        return $obj;
     }
 
-    public function view(string $name)
+    public function view(string $name, ...$parameters)
     {
-        return $this->packageObject(__FUNCTION__, $name);
+        $obj = $this->packageObject(__FUNCTION__, $name);
+        if (count($parameters) > 0) {
+            $method = array_shift($parameters);
+            return $obj->$method(...$parameters);
+        }
+        return $obj;
     }
 
-    public function ruleset(string $name)
+    public function ruleset(string $name, ...$parameters)
     {
-        return $this->packageObject(__FUNCTION__, $name);
+        $obj = $this->packageObject(__FUNCTION__, $name);
+        if (count($parameters) > 0) {
+            $method = array_shift($parameters);
+            return $obj->$method(...$parameters);
+        }
+        return $obj;
     }
 
-    public function library(string $name)
+    public function library(string $name, ...$parameters)
     {
-        return $this->packageObject(__FUNCTION__, $name);
+        $obj = $this->packageObject(__FUNCTION__, $name);
+        if (count($parameters) > 0) {
+            $method = array_shift($parameters);
+            return $obj->$method(...$parameters);
+        }
+        return $obj;
     }
 
     public function __call($type, $parameters)
