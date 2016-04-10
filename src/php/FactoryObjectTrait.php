@@ -43,8 +43,8 @@ Trait FactoryObjectTrait
         return $this->_callMethodIfPassed('ruleset', ...$parameters);
     }
 
-    public function library(...$parameters)
+    public function helper(...$parameters)
     {
-        return $this->_callMethodIfPassed('library', ...$parameters);
+        return $this->_callMethodIfPassed('helper', ...$parameters);
     }
 }

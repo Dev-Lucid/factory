@@ -7,6 +7,6 @@ interface FactoryInterface
     public function controller(string $name);
     public function view(string $name);
     public function ruleset(string $name);
-    public function library(string $name);
+    public function helper(string $name);
     public function buildParameters($object, string $method, $parameters=[]);
 }

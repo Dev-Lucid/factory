@@ -66,7 +66,7 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
         return $obj;
     }
 
-    public function library(string $name, ...$parameters)
+    public function helper(string $name, ...$parameters)
     {
         $obj = $this->packageObject(__FUNCTION__, $name);
         if (count($parameters) > 0) {

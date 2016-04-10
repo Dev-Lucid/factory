@@ -8,5 +8,5 @@ Interface FactoryObjectInterface
     public function view(...$parameters);
     public function controller(...$parameters);
     public function ruleset(...$parameters);
-    public function library(...$parameters);
+    public function helper(...$parameters);
 }
