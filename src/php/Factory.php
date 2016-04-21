@@ -3,13 +3,11 @@ namespace Lucid\Component\Factory;
 
 class Factory implements FactoryInterface, FactoryMinimalInterface
 {
-    public $path = '';
-    public $logger = null;
+    protected $logger = null; # Must implement Psr\\Log\\LoggerInterface, passed during construction
+    protected $config = null; # Must implement Lucid\\$config\\Container\\ContainerInterface, passed during construction
 
-    public function __construct($logger = null)
+    public function __construct($logger = null, $config = null)
     {
-        $this->path = realpath(__DIR__.'/../../../../../app');
-
         if (is_null($logger)) {
             $this->logger = new \Lucid\Component\BasicLogger\BasicLogger();
         } else {
@@ -18,13 +16,27 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
             }
             $this->logger = $logger;
         }
+
+        if (is_null($config)) {
+            $this->config = new \Lucid\Component\Container\Container();
+        } else {
+            if (is_object($config) === false || in_array('Lucid\\Component\\Container\\ContainerInterface', class_implements($config)) === false) {
+                throw new \Exception('Factory contructor parameter $config must either be null, or implement Lucid\\$config\\Container\\ContainerInterface (https://github.com/Dev-Lucid/container). If null is passed, then an instance of Lucid\\Component\\Container\\Container will be instantiated instead.');
+            }
+            $this->config = $config;
+        }
+
+        if ($this->config->has('root') === false) {
+            $this->config->set('root', realpath(__DIR__.'/../../'));
+        }
     }
 
     public function model(string $name, $id=null)
     {
-        \Model::$auto_prefix_models = 'App\\model\\';
-
         $className = $this->loadClass(__FUNCTION__, $name);
+        \Model::$auto_prefix_models = 'App\\model\\'; # this line is unnecessary I think
+        return \Model::factory($name);
+        /*
         if (is_null($id) === true) {
             return \Model::factory($name);
         } else {
@@ -33,52 +45,59 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
             } else {
                 return \Model::factory($name)->find_one($id);
             }
-        }
+        }*/
     }
 
-    public function controller(string $name, ...$parameters)
+    public function controller(string $name)
     {
+        return $this->packageObject(__FUNCTION__, $name);
+        /*
         $obj = $this->packageObject(__FUNCTION__, $name);
         if (count($parameters) > 0) {
             $method = array_shift($parameters);
             return $obj->$method(...$parameters);
         }
         return $obj;
+        */
     }
 
-    public function view(string $name, ...$parameters)
+    public function view(string $name)
     {
+        return $this->packageObject(__FUNCTION__, $name);
+        /*
         $obj = $this->packageObject(__FUNCTION__, $name);
         if (count($parameters) > 0) {
             $method = array_shift($parameters);
             return $obj->$method(...$parameters);
         }
         return $obj;
+        */
     }
 
     public function ruleset(string $name, ...$parameters)
     {
+        return $this->packageObject(__FUNCTION__, $name);
+        /*
         $obj = $this->packageObject(__FUNCTION__, $name);
         if (count($parameters) > 0) {
             $method = array_shift($parameters);
             return $obj->$method(...$parameters);
         }
         return $obj;
+        */
     }
 
     public function helper(string $name, ...$parameters)
     {
+        return $this->packageObject(__FUNCTION__, $name);
+        /*
         $obj = $this->packageObject(__FUNCTION__, $name);
         if (count($parameters) > 0) {
             $method = array_shift($parameters);
             return $obj->$method(...$parameters);
         }
         return $obj;
-    }
-
-    public function __call($type, $parameters)
-    {
-        return $this->packageObject($type, $parameters[0]);
+        */
     }
 
     protected function packageObject(string $type, string $name)
@@ -92,11 +111,11 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
         return $object;
     }
 
-    protected function loadClass(string $type, string $name)
+    protected function loadClass(string $type, string $name) : string
     {
         $class = 'App\\'.$type.'\\'.$name;
         if (class_exists($class) === false) {
-            $file = $this->path.'/'.$type.'/'.$name.'.php';
+            $file = $this->config->string('root').'/'.strtolower($type).'/'.$name.'.php';
             if (file_exists($file) === false) {
                 throw new \Exception('Could not find file for class '.$class.'. Should be '.$file);
             }

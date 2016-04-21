@@ -1,7 +1,8 @@
 <?php
 namespace Lucid\Component\Factory;
 
-abstract class Ruleset extends \Lucid\Component\Ruleset\Ruleset implements RulesetInterface, FactoryObjectInterface
+# extends \Lucid\Component\Ruleset\Ruleset 
+abstract class Ruleset implements RulesetInterface, FactoryObjectInterface
 {
     use FactoryObjectTrait;
 }

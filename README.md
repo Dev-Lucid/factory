@@ -1,1 +1,2 @@
-# factory
+# Factory
+A loader for dividing up code into 5 categories: models, views, controllers, rulesets, and helpers. Models are provided by Paris (https://packagist.org/packages/j4mie/paris). Views, controllers, and helpers are basically empty classes waiting for you to add your own functionality. Rulesets provide a way to validate data both client side and server side.

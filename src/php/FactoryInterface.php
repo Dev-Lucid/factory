@@ -3,7 +3,7 @@ namespace Lucid\Component\Factory;
 
 interface FactoryInterface
 {
-    public function model(string $name, $id);
+    public function model(string $name);
     public function controller(string $name);
     public function view(string $name);
     public function ruleset(string $name);

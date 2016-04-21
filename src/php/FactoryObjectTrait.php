@@ -10,41 +10,28 @@ Trait FactoryObjectTrait
         $this->factory = $factory;
     }
 
-    public function model($id=null)
+    public function model()
     {
-        $object = $this->factory->model((new \ReflectionClass($this))->getShortName());
-        if (is_null($id) === false) {
-            return $object->find_one($id);
-        }
-        return $object;
+        return $this->factory->model((new \ReflectionClass($this))->getShortName());
     }
 
-    protected function _callMethodIfPassed($type, ...$parameters) {
-        $object = $this->factory->$type((new \ReflectionClass($this))->getShortName());
-        if (count($parameters) > 0) {
-            $method = array_shift($parameters);
-            return $object->$method(...$parameters);
-        }
-        return $object;
+    public function view()
+    {
+        return $this->factory->view((new \ReflectionClass($this))->getShortName());
     }
 
-    public function view(...$parameters)
+    public function controller()
     {
-        return $this->_callMethodIfPassed('view', ...$parameters);
+        return $this->factory->controller((new \ReflectionClass($this))->getShortName());
     }
 
-    public function controller(...$parameters)
+    public function ruleset()
     {
-        return $this->_callMethodIfPassed('controller', ...$parameters);
+        return $this->factory->ruleset((new \ReflectionClass($this))->getShortName());
     }
 
-    public function ruleset(...$parameters)
+    public function helper()
     {
-        return $this->_callMethodIfPassed('ruleset', ...$parameters);
-    }
-
-    public function helper(...$parameters)
-    {
-        return $this->_callMethodIfPassed('helper', ...$parameters);
+        return $this->factory->helper((new \ReflectionClass($this))->getShortName());
     }
 }
