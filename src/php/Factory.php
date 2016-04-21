@@ -27,7 +27,7 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
         }
 
         if ($this->config->has('root') === false) {
-            $this->config->set('root', realpath(__DIR__.'/../../'));
+            $this->config->set('root', ($_SERVER['DOCUMENT_ROOT'] == '')?getcwd():$_SERVER['DOCUMENT_ROOT']);
         }
     }
 
