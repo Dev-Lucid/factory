@@ -135,7 +135,10 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
 
         # we need to use the Request object's methods for casting parameters
         if(is_array($parameters) === true) {
-            $parameters = new \Lucid\Component\Store\Store($parameters);
+            $paramObject = new \Lucid\Component\Container\Container();
+            $paramObject->setSource($parameters);
+        } else {
+            $paramObject = $parameters;
         }
 
         if (method_exists($objectClass, $method) === false) {
@@ -150,10 +153,10 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
         foreach ($methodParameters as $methodParameter) {
             $type = strval($methodParameter->getType());
             if ($parameters->is_set($methodParameter->name)) {
-                if (is_null($type) === true || $type == '' || method_exists($parameters, $type) === false) {
-                    $boundParameters[] = $parameters->get($methodParameter->name);
+                if (is_null($type) === true || $type == '' || method_exists($paramObject, $type) === false) {
+                    $boundParameters[] = $paramObject->get($methodParameter->name);
                 } else {
-                    $boundParameters[] = $parameters->$type($methodParameter->name);
+                    $boundParameters[] = $paramObject->$type($methodParameter->name);
                 }
             } else {
                 if ($methodParameter->isDefaultValueAvailable() === true) {
