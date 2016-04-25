@@ -17,17 +17,18 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
             $this->logger = $logger;
         }
 
-        if (is_null($config)) {
-            $this->config = new \Lucid\Component\Container\Container();
-        } else {
-            if (is_object($config) === false || in_array('Lucid\\Component\\Container\\ContainerInterface', class_implements($config)) === false) {
-                throw new \Exception('Factory contructor parameter $config must either be null, or implement Lucid\\$config\\Container\\ContainerInterface (https://github.com/Dev-Lucid/container). If null is passed, then an instance of Lucid\\Component\\Container\\Container will be instantiated instead.');
-            }
+        if (is_null($config) === true) {
+            $this->config = [];
+        } elseif (is_array($config) === true){
+            $this->config =& $config;
+        } elseif (is_object($config) === true && in_array('ArrayAccess', class_implements($config)) === true) {
             $this->config = $config;
+        } else {
+            throw new \Exception('Factory contructor parameter $config must either be null, an array, or an object that implements ArrayAccess.');
         }
 
-        if ($this->config->has('root') === false) {
-            $this->config->set('root', ($_SERVER['DOCUMENT_ROOT'] == '')?getcwd():$_SERVER['DOCUMENT_ROOT']);
+        if (isset($this->config['root']) === false) {
+            $this->config['root'] = ($_SERVER['DOCUMENT_ROOT'] == '')?getcwd():realpath($_SERVER['DOCUMENT_ROOT'].'/../');
         }
     }
 
@@ -115,7 +116,7 @@ class Factory implements FactoryInterface, FactoryMinimalInterface
     {
         $class = 'App\\'.$type.'\\'.$name;
         if (class_exists($class) === false) {
-            $file = $this->config->string('root').'/'.strtolower($type).'/'.$name.'.php';
+            $file = $this->config['root'].'/app/'.strtolower($type).'/'.$name.'.php';
             if (file_exists($file) === false) {
                 throw new \Exception('Could not find file for class '.$class.'. Should be '.$file);
             }
